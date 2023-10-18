@@ -1,0 +1,27 @@
+# permissions for end users to view openebs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: openebs-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: metacluster-operator
+    app.kubernetes.io/part-of: metacluster-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: openebs-viewer-role
+rules:
+- apiGroups:
+  - storage.lab-ops.cloud
+  resources:
+  - openebs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - storage.lab-ops.cloud
+  resources:
+  - openebs/status
+  verbs:
+  - get

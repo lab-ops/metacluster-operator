@@ -1,0 +1,4243 @@
+apiVersion: storage.lab-ops.cloud/v1beta1
+kind: OpenEBS
+metadata:
+  name: openebs-sample
+spec:
+  # Default values copied from <project_dir>/helm-charts/openebs/values.yaml
+  analytics:
+    enabled: true
+    pingInterval: 24h
+  apiserver:
+    affinity: {}
+    enabled: true
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
+    image: openebs/m-apiserver
+    imageTag: 2.12.2
+    nodeSelector: {}
+    ports:
+      externalPort: 5656
+      internalPort: 5656
+    replicas: 1
+    resources: {}
+    sparse:
+      enabled: "false"
+    tolerations: []
+  cleanup:
+    image:
+      imagePullSecrets: []
+      registry: null
+      repository: bitnami/kubectl
+      tag: null
+  crd:
+    enableInstall: true
+  cstor:
+    admissionServer:
+      annotations: {}
+      componentName: cstor-admission-webhook
+      failurePolicy: Fail
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/cstor-webhook
+        tag: 3.5.0
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      resources: {}
+      securityContext: {}
+      tolerations: []
+    analytics:
+      enabled: true
+      pingInterval: 24h
+    cleanup:
+      image:
+        registry: null
+        repository: bitnami/kubectl
+        tag: null
+    csiController:
+      annotations: {}
+      attacher:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-attacher
+          tag: v4.3.0
+        name: csi-attacher
+      componentName: openebs-cstor-csi-controller
+      logLevel: "5"
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      priorityClass:
+        create: true
+        name: cstor-csi-controller-critical
+        value: 900000000
+      provisioner:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-provisioner
+          tag: v3.5.0
+        name: csi-provisioner
+      resizer:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-resizer
+          tag: v1.8.0
+        name: csi-resizer
+      resources: {}
+      securityContext: {}
+      snapshotController:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/snapshot-controller
+          tag: v6.2.2
+        name: snapshot-controller
+      snapshotter:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-snapshotter
+          tag: v6.2.2
+        name: csi-snapshotter
+      tolerations: []
+    csiDriver:
+      attachRequired: false
+      create: true
+      podInfoOnMount: true
+    csiNode:
+      annotations: {}
+      componentName: openebs-cstor-csi-node
+      driverRegistrar:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-node-driver-registrar
+          tag: v2.8.0
+        name: csi-node-driver-registrar
+      kubeletDir: /var/lib/kubelet/
+      logLevel: "5"
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      priorityClass:
+        create: true
+        name: cstor-csi-node-critical
+        value: 900001000
+      resources: {}
+      securityContext: {}
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+    cspcOperator:
+      annotations: {}
+      baseDir: /var/openebs
+      componentName: cspc-operator
+      cstorPool:
+        image:
+          registry: null
+          repository: openebs/cstor-pool
+          tag: 3.5.0
+      cstorPoolExporter:
+        image:
+          registry: null
+          repository: openebs/m-exporter
+          tag: 3.5.0
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/cspc-operator
+        tag: 3.5.0
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      poolManager:
+        image:
+          registry: null
+          repository: openebs/cstor-pool-manager
+          tag: 3.5.0
+      resources: {}
+      resyncInterval: "30"
+      securityContext: {}
+      sparseDir: /var/openebs/sparse
+      tolerations: []
+    cstorCSIPlugin:
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/cstor-csi-driver
+        tag: 3.5.0
+      name: cstor-csi-plugin
+      remount: "true"
+    cvcOperator:
+      annotations: {}
+      baseDir: /var/openebs
+      componentName: cvc-operator
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/cvc-operator
+        tag: 3.5.0
+      logLevel: "2"
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      resources: {}
+      resyncInterval: "30"
+      securityContext: {}
+      target:
+        image:
+          registry: null
+          repository: openebs/cstor-istgt
+          tag: 3.5.0
+      tolerations: []
+      volumeExporter:
+        image:
+          registry: null
+          repository: openebs/m-exporter
+          tag: 3.5.0
+      volumeMgmt:
+        image:
+          registry: null
+          repository: openebs/cstor-volume-manager
+          tag: 3.5.0
+    enabled: false
+    global: {}
+    imagePullSecrets: null
+    openebs-ndm:
+      crd:
+        enableInstall: false
+      featureGates:
+        APIService:
+          address: 0.0.0.0:9115
+          enabled: false
+          featureGateFlag: APIService
+        ChangeDetection:
+          enabled: false
+          featureGateFlag: ChangeDetection
+        GPTBasedUUID:
+          enabled: true
+          featureGateFlag: GPTBasedUUID
+        PartitionTableUUID:
+          enabled: false
+          featureGateFlag: PartitionTableUUID
+        UseOSDisk:
+          enabled: false
+          featureGateFlag: UseOSDisk
+        enabled: true
+      global: {}
+      helperPod:
+        image:
+          pullPolicy: IfNotPresent
+          registry: ""
+          repository: openebs/linux-utils
+          tag: 3.4.0
+      imagePullSecrets: null
+      ndm:
+        annotations: {}
+        componentName: ndm
+        enabled: true
+        filters:
+          enableOsDiskExcludeFilter: true
+          enablePathFilter: true
+          enableVendorFilter: true
+          excludePaths: loop,fd0,sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd
+          excludeVendors: CLOUDBYT,OpenEBS
+          includePaths: ""
+          osDiskExcludePaths: /,/etc/hosts,/boot
+        healthCheck:
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/node-disk-manager
+          tag: 2.1.0
+        metaConfig:
+          deviceLabelTypes: ""
+          nodeLabelPattern: ""
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels:
+          name: openebs-ndm
+        probes:
+          enableSeachest: false
+          enableSmartProbe: true
+          enableUdevProbe: true
+        resources: {}
+        securityContext: {}
+        sparse:
+          count: "0"
+          path: /var/openebs/sparse
+          size: "10737418240"
+        tolerations: []
+        updateStrategy:
+          type: RollingUpdate
+      ndmExporter:
+        clusterExporter:
+          metricsPort: 9100
+          name: cluster-exporter
+          nodeSelector: {}
+          podLabels:
+            name: openebs-ndm-cluster-exporter
+          tolerations: []
+        enabled: false
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/node-disk-exporter
+          tag: 2.1.0
+        nodeExporter:
+          metricsPort: 9101
+          name: node-exporter
+          nodeSelector: {}
+          podLabels:
+            name: openebs-ndm-node-exporter
+          tolerations: []
+      ndmOperator:
+        annotations: {}
+        enabled: true
+        healthCheck:
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/node-disk-operator
+          tag: 2.1.0
+        name: operator
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels:
+          name: openebs-ndm-operator
+        readinessCheck:
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        replicas: 1
+        resources: {}
+        securityContext: {}
+        tolerations: []
+        upgradeStrategy: Recreate
+      release:
+        version: 2.1.0
+      serviceAccount:
+        create: true
+        name: openebs-ndm
+      varDirectoryPath:
+        baseDir: /var/openebs
+    openebsNDM:
+      enabled: false
+    pool:
+      image: openebs/cstor-pool
+      imageTag: 2.12.2
+    poolMgmt:
+      image: openebs/cstor-pool-mgmt
+      imageTag: 2.12.2
+    rbac:
+      create: true
+      pspEnabled: false
+    release:
+      version: 3.5.0
+    serviceAccount:
+      annotations: {}
+      csiController:
+        create: true
+        name: openebs-cstor-csi-controller-sa
+      csiNode:
+        create: true
+        name: openebs-cstor-csi-node-sa
+      cstorOperator:
+        create: true
+        name: openebs-cstor-operator
+    target:
+      image: openebs/cstor-istgt
+      imageTag: 2.12.2
+    volumeMgmt:
+      image: openebs/cstor-volume-mgmt
+      imageTag: 2.12.2
+  defaultStorageConfig:
+    enabled: "true"
+  featureGates:
+    APIService:
+      address: 0.0.0.0:9115
+      enabled: false
+      featureGateFlag: APIService
+    ChangeDetection:
+      enabled: false
+      featureGateFlag: ChangeDetection
+    GPTBasedUUID:
+      enabled: true
+      featureGateFlag: GPTBasedUUID
+    PartitionTableUUID:
+      enabled: false
+      featureGateFlag: PartitionTableUUID
+    UseOSDisk:
+      enabled: false
+      featureGateFlag: UseOSDisk
+    enabled: true
+  helper:
+    image: openebs/linux-utils
+    imageTag: 3.4.0
+  image:
+    pullPolicy: IfNotPresent
+    repository: ""
+  imagePullSecrets: []
+  jiva:
+    analytics:
+      enabled: true
+      pingInterval: 24h
+    csiController:
+      annotations: {}
+      attacher:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-attacher
+          tag: v4.3.0
+        name: csi-attacher
+      componentName: openebs-jiva-csi-controller
+      livenessprobe:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/livenessprobe
+          tag: v2.10.0
+        name: liveness-probe
+      logLevel: "5"
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      priorityClass:
+        create: true
+        name: jiva-csi-controller-critical
+        value: 900000000
+      provisioner:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-provisioner
+          tag: v3.5.0
+        name: csi-provisioner
+      resizer:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-resizer
+          tag: v1.8.0
+        name: csi-resizer
+      resources: {}
+      securityContext: {}
+      tolerations: []
+    csiDriver:
+      attachRequired: false
+      create: true
+      podInfoOnMount: true
+    csiNode:
+      annotations: {}
+      componentName: openebs-jiva-csi-node
+      driverRegistrar:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-node-driver-registrar
+          tag: v2.8.0
+        name: csi-node-driver-registrar
+      kubeletDir: /var/lib/kubelet/
+      livenessprobe:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/livenessprobe
+          tag: v2.10.0
+        name: liveness-probe
+      logLevel: "5"
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      priorityClass:
+        create: true
+        name: jiva-csi-node-critical
+        value: 900001000
+      resources: {}
+      securityContext: {}
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+    defaultPolicy:
+      enabled: true
+      name: openebs-jiva-default-policy
+      replicaSC: openebs-hostpath
+      replicas: 3
+    defaultStoragePath: /var/openebs
+    enabled: false
+    global: {}
+    image: openebs/jiva
+    imagePullSecrets: null
+    imageTag: 2.12.2
+    jivaCSIPlugin:
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/jiva-csi
+        tag: 3.4.0
+      name: jiva-csi-plugin
+      remount: "true"
+    jivaOperator:
+      annotations: {}
+      componentName: jiva-operator
+      controller:
+        image:
+          registry: null
+          repository: openebs/jiva
+          tag: 3.4.0
+      exporter:
+        image:
+          registry: null
+          repository: openebs/m-exporter
+          tag: 3.4.0
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/jiva-operator
+        tag: 3.4.0
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      replica:
+        image:
+          registry: null
+          repository: openebs/jiva
+          tag: 3.4.0
+      resources: {}
+      resyncInterval: "30"
+      securityContext: {}
+      tolerations: []
+    localpv-provisioner:
+      analytics:
+        enabled: true
+        pingInterval: 24h
+      deviceClass:
+        blockDeviceSelectors: {}
+        enabled: false
+        fsType: ext4
+        isDefaultClass: false
+        name: openebs-device
+        nodeAffinityLabels: []
+        reclaimPolicy: Delete
+      fullnameOverride: ""
+      global: {}
+      helperPod:
+        image:
+          pullPolicy: IfNotPresent
+          registry: ""
+          repository: openebs/linux-utils
+          tag: 3.4.0
+      hostpathClass:
+        basePath: ""
+        enabled: true
+        ext4Quota:
+          enabled: false
+          hardLimitGrace: 0%
+          softLimitGrace: 0%
+        isDefaultClass: false
+        name: openebs-hostpath
+        nodeAffinityLabels: []
+        reclaimPolicy: Delete
+        xfsQuota:
+          enabled: false
+          hardLimitGrace: 0%
+          softLimitGrace: 0%
+      imagePullSecrets: null
+      localpv:
+        affinity: {}
+        annotations: {}
+        basePath: /var/openebs/local
+        enableLeaderElection: true
+        enabled: true
+        healthCheck:
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/provisioner-localpv
+          tag: 3.4.0
+        name: localpv-provisioner
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels:
+          name: openebs-localpv-provisioner
+        privileged: true
+        replicas: 1
+        resources: null
+        securityContext: {}
+        tolerations: []
+        updateStrategy:
+          type: RollingUpdate
+        waitForBDBindTimeoutRetryCount: "12"
+      nameOverride: ""
+      openebs-ndm:
+        crd:
+          enableInstall: false
+        featureGates:
+          APIService:
+            address: 0.0.0.0:9115
+            enabled: false
+            featureGateFlag: APIService
+          ChangeDetection:
+            enabled: false
+            featureGateFlag: ChangeDetection
+          GPTBasedUUID:
+            enabled: true
+            featureGateFlag: GPTBasedUUID
+          PartitionTableUUID:
+            enabled: false
+            featureGateFlag: PartitionTableUUID
+          UseOSDisk:
+            enabled: false
+            featureGateFlag: UseOSDisk
+          enabled: true
+        global: {}
+        helperPod:
+          image:
+            pullPolicy: IfNotPresent
+            registry: ""
+            repository: openebs/linux-utils
+            tag: 3.4.0
+        imagePullSecrets: null
+        ndm:
+          annotations: {}
+          componentName: ndm
+          enabled: true
+          filters:
+            enableOsDiskExcludeFilter: true
+            enablePathFilter: true
+            enableVendorFilter: true
+            excludePaths: loop,fd0,sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd
+            excludeVendors: CLOUDBYT,OpenEBS
+            includePaths: ""
+            osDiskExcludePaths: /,/etc/hosts,/boot
+          healthCheck:
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          image:
+            pullPolicy: IfNotPresent
+            registry: null
+            repository: openebs/node-disk-manager
+            tag: 2.1.0
+          metaConfig:
+            deviceLabelTypes: ""
+            nodeLabelPattern: ""
+          nodeSelector: {}
+          podAnnotations: {}
+          podLabels:
+            name: openebs-ndm
+          probes:
+            enableSeachest: false
+            enableSmartProbe: true
+            enableUdevProbe: true
+          resources: {}
+          securityContext: {}
+          sparse:
+            count: "0"
+            path: /var/openebs/sparse
+            size: "10737418240"
+          tolerations: []
+          updateStrategy:
+            type: RollingUpdate
+        ndmExporter:
+          clusterExporter:
+            metricsPort: 9100
+            name: cluster-exporter
+            nodeSelector: {}
+            podLabels:
+              name: openebs-ndm-cluster-exporter
+            tolerations: []
+          enabled: false
+          image:
+            pullPolicy: IfNotPresent
+            registry: null
+            repository: openebs/node-disk-exporter
+            tag: 2.1.0
+          nodeExporter:
+            metricsPort: 9101
+            name: node-exporter
+            nodeSelector: {}
+            podLabels:
+              name: openebs-ndm-node-exporter
+            tolerations: []
+        ndmOperator:
+          annotations: {}
+          enabled: true
+          healthCheck:
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          image:
+            pullPolicy: IfNotPresent
+            registry: null
+            repository: openebs/node-disk-operator
+            tag: 2.1.0
+          name: operator
+          nodeSelector: {}
+          podAnnotations: {}
+          podLabels:
+            name: openebs-ndm-operator
+          readinessCheck:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          replicas: 1
+          resources: {}
+          securityContext: {}
+          tolerations: []
+          upgradeStrategy: Recreate
+        release:
+          version: 2.1.0
+        serviceAccount:
+          create: true
+          name: openebs-ndm
+        varDirectoryPath:
+          baseDir: /var/openebs
+      openebsNDM:
+        enabled: false
+      podSecurityContext: {}
+      rbac:
+        create: true
+        pspEnabled: false
+      release:
+        version: 3.4.0
+      serviceAccount:
+        annotations: {}
+        create: true
+        name: null
+    openebsLocalpv:
+      enabled: false
+    rbac:
+      create: true
+      pspEnabled: false
+    release:
+      version: 3.4.0
+    replicas: 3
+    serviceAccount:
+      annotations: {}
+      csiController:
+        create: true
+        name: openebs-jiva-csi-controller-sa
+      csiNode:
+        create: true
+        name: openebs-jiva-csi-node-sa
+      jivaOperator:
+        create: true
+        name: openebs-jiva-operator
+    storageClass:
+      allowVolumeExpansion: true
+      enabled: true
+      isDefaultClass: false
+      name: openebs-jiva-csi-default
+      reclaimPolicy: Delete
+  legacy:
+    enabled: false
+  localprovisioner:
+    affinity: {}
+    basePath: /var/openebs/local
+    deviceClass:
+      blockDeviceSelectors: {}
+      enabled: true
+      fsType: ext4
+      isDefaultClass: false
+      name: openebs-device
+      nodeAffinityLabels: []
+      reclaimPolicy: Delete
+    enableDeviceClass: true
+    enableHostpathClass: true
+    enableLeaderElection: true
+    enabled: true
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
+    hostpathClass:
+      basePath: ""
+      enabled: true
+      ext4Quota:
+        enabled: false
+        hardLimitGrace: 0%
+        softLimitGrace: 0%
+      isDefaultClass: false
+      name: openebs-hostpath
+      nodeAffinityLabels: []
+      reclaimPolicy: Delete
+      xfsQuota:
+        enabled: false
+        hardLimitGrace: 0%
+        softLimitGrace: 0%
+    image: openebs/provisioner-localpv
+    imageTag: 3.4.0
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    tolerations: []
+    waitForBDBindTimeoutRetryCount: "12"
+  localpv-provisioner:
+    analytics:
+      enabled: true
+      pingInterval: 24h
+    deviceClass:
+      blockDeviceSelectors: {}
+      enabled: true
+      fsType: ext4
+      isDefaultClass: false
+      name: openebs-device
+      nodeAffinityLabels: []
+      reclaimPolicy: Delete
+    enabled: false
+    fullnameOverride: ""
+    global: {}
+    helperPod:
+      image:
+        pullPolicy: IfNotPresent
+        registry: ""
+        repository: openebs/linux-utils
+        tag: 3.4.0
+    hostpathClass:
+      basePath: ""
+      enabled: true
+      ext4Quota:
+        enabled: false
+        hardLimitGrace: 0%
+        softLimitGrace: 0%
+      isDefaultClass: false
+      name: openebs-hostpath
+      nodeAffinityLabels: []
+      reclaimPolicy: Delete
+      xfsQuota:
+        enabled: false
+        hardLimitGrace: 0%
+        softLimitGrace: 0%
+    imagePullSecrets: null
+    localpv:
+      affinity: {}
+      annotations: {}
+      basePath: /var/openebs/local
+      enableLeaderElection: true
+      enabled: true
+      healthCheck:
+        initialDelaySeconds: 30
+        periodSeconds: 60
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/provisioner-localpv
+        tag: 3.4.0
+      name: localpv-provisioner
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels:
+        name: openebs-localpv-provisioner
+      privileged: true
+      replicas: 1
+      resources: null
+      securityContext: {}
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+      waitForBDBindTimeoutRetryCount: "12"
+    nameOverride: ""
+    openebs-ndm:
+      crd:
+        enableInstall: false
+      featureGates:
+        APIService:
+          address: 0.0.0.0:9115
+          enabled: false
+          featureGateFlag: APIService
+        ChangeDetection:
+          enabled: false
+          featureGateFlag: ChangeDetection
+        GPTBasedUUID:
+          enabled: true
+          featureGateFlag: GPTBasedUUID
+        PartitionTableUUID:
+          enabled: false
+          featureGateFlag: PartitionTableUUID
+        UseOSDisk:
+          enabled: false
+          featureGateFlag: UseOSDisk
+        enabled: true
+      global: {}
+      helperPod:
+        image:
+          pullPolicy: IfNotPresent
+          registry: ""
+          repository: openebs/linux-utils
+          tag: 3.4.0
+      imagePullSecrets: null
+      ndm:
+        annotations: {}
+        componentName: ndm
+        enabled: true
+        filters:
+          enableOsDiskExcludeFilter: true
+          enablePathFilter: true
+          enableVendorFilter: true
+          excludePaths: loop,fd0,sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd
+          excludeVendors: CLOUDBYT,OpenEBS
+          includePaths: ""
+          osDiskExcludePaths: /,/etc/hosts,/boot
+        healthCheck:
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/node-disk-manager
+          tag: 2.1.0
+        metaConfig:
+          deviceLabelTypes: ""
+          nodeLabelPattern: ""
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels:
+          name: openebs-ndm
+        probes:
+          enableSeachest: false
+          enableSmartProbe: true
+          enableUdevProbe: true
+        resources: {}
+        securityContext: {}
+        sparse:
+          count: "0"
+          path: /var/openebs/sparse
+          size: "10737418240"
+        tolerations: []
+        updateStrategy:
+          type: RollingUpdate
+      ndmExporter:
+        clusterExporter:
+          metricsPort: 9100
+          name: cluster-exporter
+          nodeSelector: {}
+          podLabels:
+            name: openebs-ndm-cluster-exporter
+          tolerations: []
+        enabled: false
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/node-disk-exporter
+          tag: 2.1.0
+        nodeExporter:
+          metricsPort: 9101
+          name: node-exporter
+          nodeSelector: {}
+          podLabels:
+            name: openebs-ndm-node-exporter
+          tolerations: []
+      ndmOperator:
+        annotations: {}
+        enabled: true
+        healthCheck:
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/node-disk-operator
+          tag: 2.1.0
+        name: operator
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels:
+          name: openebs-ndm-operator
+        readinessCheck:
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        replicas: 1
+        resources: {}
+        securityContext: {}
+        tolerations: []
+        upgradeStrategy: Recreate
+      release:
+        version: 2.1.0
+      serviceAccount:
+        create: true
+        name: openebs-ndm
+      varDirectoryPath:
+        baseDir: /var/openebs
+    openebsNDM:
+      enabled: false
+    podSecurityContext: {}
+    rbac:
+      create: true
+      pspEnabled: false
+    release:
+      version: 3.4.0
+    serviceAccount:
+      annotations: {}
+      create: true
+      name: null
+  lvm-localpv:
+    analytics:
+      enabled: true
+    crd:
+      enableInstall: true
+      volumeSnapshot: true
+    enabled: false
+    global: {}
+    imagePullSecrets: null
+    lvmController:
+      annotations: {}
+      componentName: openebs-lvm-controller
+      kubeClientRateLimiter:
+        burst: 0
+        qps: 0
+      logLevel: 5
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels:
+        name: openebs-lvm-controller
+      priorityClass:
+        create: true
+        name: lvm-localpv-csi-controller-critical
+      provisioner:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-provisioner
+          tag: v3.5.0
+        name: csi-provisioner
+      replicas: 1
+      resizer:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-resizer
+          tag: v1.8.0
+        name: csi-resizer
+      resources: {}
+      securityContext: {}
+      serviceName: openebs-lvm
+      snapshotController:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/snapshot-controller
+          tag: v6.2.2
+        name: snapshot-controller
+      snapshotter:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-snapshotter
+          tag: v6.2.2
+        name: csi-snapshotter
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+    lvmNode:
+      annotations: {}
+      componentName: openebs-lvm-node
+      driverRegistrar:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-node-driver-registrar
+          tag: v2.8.0
+        name: csi-node-driver-registrar
+      kubeClientRateLimiter:
+        burst: 0
+        qps: 0
+      kubeletDir: /var/lib/kubelet/
+      labels: {}
+      logLevel: 5
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels:
+        app: openebs-lvm-node
+      priorityClass:
+        create: true
+        name: lvm-localpv-csi-node-critical
+      resources: {}
+      securityContext: {}
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+    lvmPlugin:
+      allowedTopologies: kubernetes.io/hostname,
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/lvm-driver
+        tag: 1.3.0
+      ioLimits:
+        containerRuntime: containerd
+        enabled: false
+        readIopsPerGB: ""
+        writeIopsPerGB: ""
+      metricsPort: 9500
+      name: openebs-lvm-plugin
+    rbac:
+      pspEnabled: false
+    release:
+      version: 1.3.0
+    role: openebs-lvm
+    serviceAccount:
+      lvmController:
+        create: true
+        name: openebs-lvm-controller-sa
+      lvmNode:
+        create: true
+        name: openebs-lvm-node-sa
+    storageCapacity: true
+  mayastor:
+    agents:
+      core:
+        capacity:
+          thin:
+            poolCommitment: 250%
+            snapshotCommitment: 40%
+            volumeCommitment: 40%
+            volumeCommitmentInitial: 40%
+        logLevel: info
+        partialRebuildWaitPeriod: ""
+        priorityClassName: ""
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 128Mi
+          requests:
+            cpu: 500m
+            memory: 32Mi
+        tolerations: []
+      ha:
+        cluster:
+          logLevel: info
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 100m
+              memory: 16Mi
+        enabled: true
+        node:
+          logLevel: info
+          priorityClassName: ""
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          tolerations: []
+    apis:
+      rest:
+        logLevel: info
+        priorityClassName: ""
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 64Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        service:
+          nodePorts:
+            http: 30011
+            https: 30010
+          type: ClusterIP
+        tolerations: []
+    base:
+      cache_poll_period: 30s
+      default_req_timeout: 5s
+      imagePullSecrets:
+        enabled: false
+        secrets:
+        - name: login
+      initContainers:
+        containers:
+        - command:
+          - sh
+          - -c
+          - trap "exit 1" TERM; until nc -vzw 5 {{ .Release.Name }}-agent-core 50051;
+            do date; echo "Waiting for agent-core-grpc services..."; sleep 1; done;
+          image: busybox:latest
+          name: agent-core-grpc-probe
+        - command:
+          - sh
+          - -c
+          - trap "exit 1" TERM; until nc -vzw 5 {{ .Release.Name }}-etcd {{.Values.etcd.service.port}};
+            do date; echo "Waiting for etcd..."; sleep 1; done;
+          image: busybox:latest
+          name: etcd-probe
+        enabled: true
+      initCoreContainers:
+        containers:
+        - command:
+          - sh
+          - -c
+          - trap "exit 1" TERM; until nc -vzw 5 {{ .Release.Name }}-etcd {{.Values.etcd.service.port}};
+            do date; echo "Waiting for etcd..."; sleep 1; done;
+          image: busybox:latest
+          name: etcd-probe
+        enabled: true
+      initHaNodeContainers:
+        containers:
+        - command:
+          - sh
+          - -c
+          - trap "exit 1" TERM; until nc -vzw 5 {{ .Release.Name }}-agent-core 50052;
+            do date; echo "Waiting for agent-cluster-grpc services..."; sleep 1; done;
+          image: busybox:latest
+          name: agent-cluster-grpc-probe
+        enabled: true
+      initRestContainer:
+        enabled: true
+        initContainer:
+        - command:
+          - sh
+          - -c
+          - trap "exit 1" TERM; until nc -vzw 5 {{ .Release.Name }}-api-rest 8081; do
+            date; echo "Waiting for REST API endpoint to become available"; sleep 1;
+            done;
+          image: busybox:latest
+          name: api-rest-probe
+      jaeger:
+        agent:
+          initContainer:
+          - command:
+            - sh
+            - -c
+            - trap "exit 1" TERM; until nc -vzw 5 -u {{.Values.base.jaeger.agent.name}}
+              {{.Values.base.jaeger.agent.port}}; do date; echo "Waiting for jaeger...";
+              sleep 1; done;
+            image: busybox:latest
+            name: jaeger-probe
+          name: jaeger-agent
+          port: 6831
+        enabled: false
+        initContainer: true
+      logSilenceLevel: null
+      metrics:
+        enabled: true
+        pollingInterval: 5m
+    csi:
+      controller:
+        logLevel: info
+        priorityClassName: ""
+        resources:
+          limits:
+            cpu: 32m
+            memory: 128Mi
+          requests:
+            cpu: 16m
+            memory: 64Mi
+        tolerations: []
+      image:
+        attacherTag: v4.3.0
+        provisionerTag: v3.5.0
+        pullPolicy: IfNotPresent
+        registrarTag: v2.8.0
+        registry: registry.k8s.io
+        repo: sig-storage
+        snapshotControllerTag: v6.2.1
+        snapshotterTag: v6.2.1
+      node:
+        kubeletDir: /var/lib/kubelet
+        logLevel: info
+        nvme:
+          ctrl_loss_tmo: "1980"
+          io_timeout: "30"
+          keep_alive_tmo: ""
+        pluginMounthPath: /csi
+        priorityClassName: ""
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+        socketPath: csi.sock
+        tolerations: []
+        topology:
+          nodeSelector: false
+          segments:
+            openebs.io/csi-node: mayastor
+    earlyEvictionTolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 5
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 5
+    enabled: false
+    etcd:
+      affinity: {}
+      args: []
+      auth:
+        client:
+          caFilename: ""
+          certFilename: cert.pem
+          certKeyFilename: key.pem
+          enableAuthentication: false
+          existingSecret: ""
+          secureTransport: false
+          useAutoTLS: false
+        peer:
+          caFilename: ""
+          certFilename: cert.pem
+          certKeyFilename: key.pem
+          enableAuthentication: false
+          existingSecret: ""
+          secureTransport: false
+          useAutoTLS: false
+        rbac:
+          allowNoneAuthentication: true
+          create: false
+          enabled: false
+          existingSecret: ""
+          existingSecretPasswordKey: ""
+          rootPassword: ""
+        token:
+          privateKey:
+            existingSecret: ""
+            filename: jwt-token.pem
+          signMethod: RS256
+          ttl: 10m
+          type: jwt
+      autoCompactionMode: revision
+      autoCompactionRetention: 100
+      client:
+        secureTransport: false
+      clusterDomain: cluster.local
+      command: []
+      common:
+        exampleValue: common-chart
+        global:
+          imagePullSecrets: []
+          imageRegistry: ""
+          storageClass: ""
+      commonAnnotations: {}
+      commonLabels: {}
+      configuration: ""
+      containerPorts:
+        client: 2379
+        peer: 2380
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        enabled: true
+        runAsNonRoot: true
+        runAsUser: 1001
+      customLivenessProbe: {}
+      customReadinessProbe: {}
+      customStartupProbe: {}
+      debug: false
+      diagnosticMode:
+        args:
+        - infinity
+        command:
+        - sleep
+        enabled: false
+      disasterRecovery:
+        cronjob:
+          historyLimit: 1
+          nodeSelector: {}
+          podAnnotations: {}
+          resources:
+            limits: {}
+            requests: {}
+          schedule: '*/30 * * * *'
+          snapshotHistoryLimit: 1
+          tolerations: []
+        enabled: false
+        pvc:
+          existingClaim: ""
+          size: 2Gi
+          storageClassName: nfs
+      existingConfigmap: ""
+      extraDeploy: []
+      extraEnvVars:
+      - name: ETCD_QUOTA_BACKEND_BYTES
+        value: "8589934592"
+      extraEnvVarsCM: ""
+      extraEnvVarsSecret: ""
+      extraVolumeMounts: []
+      extraVolumes: []
+      fullnameOverride: ""
+      global:
+        imagePullSecrets: []
+        imageRegistry: ""
+        storageClass: ""
+      hostAliases: []
+      image:
+        debug: false
+        digest: ""
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/etcd
+        tag: 3.5.6-debian-11-r10
+      initContainers: []
+      initialClusterState: new
+      kubeVersion: ""
+      lifecycleHooks: {}
+      livenessProbe:
+        enabled: true
+        failureThreshold: 5
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        successThreshold: 1
+        timeoutSeconds: 5
+      localpvScConfig:
+        basePath: /var/local/localpv-hostpath/{{ .Release.Name }}/etcd
+        name: mayastor-etcd-localpv
+        reclaimPolicy: Delete
+        volumeBindingMode: WaitForFirstConsumer
+      logLevel: info
+      maxProcs: ""
+      metrics:
+        enabled: false
+        podAnnotations:
+          prometheus.io/port: '{{ .Values.containerPorts.client }}'
+          prometheus.io/scrape: "true"
+        podMonitor:
+          additionalLabels: {}
+          enabled: false
+          interval: 30s
+          namespace: monitoring
+          relabelings: []
+          scheme: http
+          scrapeTimeout: 30s
+          tlsConfig: {}
+        prometheusRule:
+          additionalLabels: {}
+          enabled: false
+          namespace: ""
+          rules: []
+      nameOverride: ""
+      networkPolicy:
+        allowExternal: true
+        enabled: false
+        extraEgress: []
+        extraIngress: []
+        ingressNSMatchLabels: {}
+        ingressNSPodMatchLabels: {}
+      nodeAffinityPreset:
+        key: ""
+        type: ""
+        values: []
+      nodeSelector: {}
+      pdb:
+        create: true
+        maxUnavailable: ""
+        minAvailable: 51%
+      peer:
+        secureTransport: false
+      persistence:
+        accessModes:
+        - ReadWriteOnce
+        annotations: {}
+        enabled: true
+        reclaimPolicy: Delete
+        selector: {}
+        size: 2Gi
+        storageClass: mayastor-etcd-localpv
+      persistentVolumeClaimRetentionPolicy:
+        enabled: false
+        whenDeleted: Retain
+        whenScaled: Retain
+      podAffinityPreset: ""
+      podAnnotations: {}
+      podAntiAffinityPreset: hard
+      podLabels:
+        app: etcd
+        openebs.io/logging: "true"
+      podManagementPolicy: Parallel
+      podSecurityContext:
+        enabled: true
+        fsGroup: 1001
+      priorityClassName: ""
+      readinessProbe:
+        enabled: true
+        failureThreshold: 5
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      removeMemberOnContainerTermination: false
+      replicaCount: 3
+      resources:
+        limits: {}
+        requests: {}
+      runtimeClassName: ""
+      schedulerName: ""
+      service:
+        annotations: {}
+        clientPortNameOverride: ""
+        clusterIP: ""
+        enabled: true
+        externalIPs: []
+        externalTrafficPolicy: Cluster
+        extraPorts: []
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePorts:
+          client: ""
+          clientPort: 31379
+          peer: ""
+          peerPort: ""
+        peerPortNameOverride: ""
+        port: 2379
+        ports:
+          client: 2379
+          peer: 2380
+        sessionAffinity: None
+        sessionAffinityConfig: {}
+        type: ClusterIP
+      serviceAccount:
+        annotations: {}
+        automountServiceAccountToken: true
+        create: false
+        labels: {}
+        name: ""
+      shareProcessNamespace: false
+      sidecars: []
+      startFromSnapshot:
+        enabled: false
+        existingClaim: ""
+        snapshotFilename: ""
+      startupProbe:
+        enabled: false
+        failureThreshold: 60
+        initialDelaySeconds: 0
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      terminationGracePeriodSeconds: ""
+      tolerations: []
+      topologySpreadConstraints: []
+      updateStrategy:
+        type: RollingUpdate
+      volumePermissions:
+        enabled: true
+        image:
+          digest: ""
+          pullPolicy: IfNotPresent
+          pullSecrets: []
+          registry: docker.io
+          repository: bitnami/bitnami-shell
+          tag: 11-debian-11-r63
+        resources:
+          limits: {}
+          requests: {}
+    eventing:
+      enabled: true
+    global: {}
+    image:
+      pullPolicy: IfNotPresent
+      registry: docker.io
+      repo: openebs
+      repoTags:
+        controlPlane: ""
+        dataPlane: ""
+        extensions: ""
+      tag: v2.4.0
+    io_engine:
+      api: v1
+      coreList: []
+      cpuCount: "2"
+      envcontext: ""
+      logLevel: info
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        openebs.io/engine: mayastor
+      priorityClassName: ""
+      reactorFreezeDetection:
+        enabled: false
+      resources:
+        limits:
+          cpu: ""
+          hugepages2Mi: 2Gi
+          memory: 1Gi
+        requests:
+          cpu: ""
+          hugepages2Mi: 2Gi
+          memory: 1Gi
+      target:
+        nvmf:
+          hostCmdRetryDelay:
+            crdt1: 30
+          iface: ""
+          ptpl: true
+      tolerations: []
+    jaeger-operator:
+      affinity: {}
+      crd:
+        install: false
+      extraEnv: []
+      extraLabels: {}
+      global: {}
+      image:
+        imagePullSecrets: []
+        pullPolicy: IfNotPresent
+        repository: jaegertracing/jaeger-operator
+        tag: 1.24.0
+      jaeger:
+        create: false
+        namespace: null
+        spec: {}
+      name: '{{ .Release.Name }}'
+      nodeSelector: {}
+      priorityClassName: ""
+      rbac:
+        clusterRole: true
+        create: true
+        pspEnabled: false
+      resources: {}
+      securityContext: {}
+      service:
+        annotations: {}
+        type: ClusterIP
+      serviceAccount:
+        annotations: {}
+        create: true
+        name: null
+      tolerations: []
+    localpv-provisioner:
+      analytics:
+        enabled: true
+        pingInterval: 24h
+      deviceClass:
+        blockDeviceSelectors: {}
+        enabled: false
+        fsType: ext4
+        isDefaultClass: false
+        name: openebs-device
+        nodeAffinityLabels: []
+        reclaimPolicy: Delete
+      enabled: true
+      fullnameOverride: ""
+      global: {}
+      helperPod:
+        image:
+          pullPolicy: IfNotPresent
+          registry: ""
+          repository: openebs/linux-utils
+          tag: 3.4.0
+      hostpathClass:
+        basePath: ""
+        enabled: false
+        ext4Quota:
+          enabled: false
+          hardLimitGrace: 0%
+          softLimitGrace: 0%
+        isDefaultClass: false
+        name: openebs-hostpath
+        nodeAffinityLabels: []
+        reclaimPolicy: Delete
+        xfsQuota:
+          enabled: false
+          hardLimitGrace: 0%
+          softLimitGrace: 0%
+      imagePullSecrets: null
+      localpv:
+        affinity: {}
+        annotations: {}
+        basePath: /var/openebs/local
+        enableLeaderElection: true
+        enabled: true
+        healthCheck:
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        image:
+          pullPolicy: IfNotPresent
+          registry: null
+          repository: openebs/provisioner-localpv
+          tag: 3.4.0
+        name: localpv-provisioner
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels:
+          name: openebs-localpv-provisioner
+        privileged: true
+        replicas: 1
+        resources: null
+        securityContext: {}
+        tolerations: []
+        updateStrategy:
+          type: RollingUpdate
+        waitForBDBindTimeoutRetryCount: "12"
+      nameOverride: ""
+      openebs-ndm:
+        crd:
+          enableInstall: false
+        featureGates:
+          APIService:
+            address: 0.0.0.0:9115
+            enabled: false
+            featureGateFlag: APIService
+          ChangeDetection:
+            enabled: false
+            featureGateFlag: ChangeDetection
+          GPTBasedUUID:
+            enabled: true
+            featureGateFlag: GPTBasedUUID
+          PartitionTableUUID:
+            enabled: false
+            featureGateFlag: PartitionTableUUID
+          UseOSDisk:
+            enabled: false
+            featureGateFlag: UseOSDisk
+          enabled: true
+        global: {}
+        helperPod:
+          image:
+            pullPolicy: IfNotPresent
+            registry: ""
+            repository: openebs/linux-utils
+            tag: 3.4.0
+        imagePullSecrets: null
+        ndm:
+          annotations: {}
+          componentName: ndm
+          enabled: true
+          filters:
+            enableOsDiskExcludeFilter: true
+            enablePathFilter: true
+            enableVendorFilter: true
+            excludePaths: loop,fd0,sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd
+            excludeVendors: CLOUDBYT,OpenEBS
+            includePaths: ""
+            osDiskExcludePaths: /,/etc/hosts,/boot
+          healthCheck:
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          image:
+            pullPolicy: IfNotPresent
+            registry: null
+            repository: openebs/node-disk-manager
+            tag: 2.1.0
+          metaConfig:
+            deviceLabelTypes: ""
+            nodeLabelPattern: ""
+          nodeSelector: {}
+          podAnnotations: {}
+          podLabels:
+            name: openebs-ndm
+          probes:
+            enableSeachest: false
+            enableSmartProbe: true
+            enableUdevProbe: true
+          resources: {}
+          securityContext: {}
+          sparse:
+            count: "0"
+            path: /var/openebs/sparse
+            size: "10737418240"
+          tolerations: []
+          updateStrategy:
+            type: RollingUpdate
+        ndmExporter:
+          clusterExporter:
+            metricsPort: 9100
+            name: cluster-exporter
+            nodeSelector: {}
+            podLabels:
+              name: openebs-ndm-cluster-exporter
+            tolerations: []
+          enabled: false
+          image:
+            pullPolicy: IfNotPresent
+            registry: null
+            repository: openebs/node-disk-exporter
+            tag: 2.1.0
+          nodeExporter:
+            metricsPort: 9101
+            name: node-exporter
+            nodeSelector: {}
+            podLabels:
+              name: openebs-ndm-node-exporter
+            tolerations: []
+        ndmOperator:
+          annotations: {}
+          enabled: true
+          healthCheck:
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          image:
+            pullPolicy: IfNotPresent
+            registry: null
+            repository: openebs/node-disk-operator
+            tag: 2.1.0
+          name: operator
+          nodeSelector: {}
+          podAnnotations: {}
+          podLabels:
+            name: openebs-ndm-operator
+          readinessCheck:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          replicas: 1
+          resources: {}
+          securityContext: {}
+          tolerations: []
+          upgradeStrategy: Recreate
+        release:
+          version: 2.1.0
+        serviceAccount:
+          create: true
+          name: openebs-ndm
+        varDirectoryPath:
+          baseDir: /var/openebs
+      openebsNDM:
+        enabled: false
+      podSecurityContext: {}
+      rbac:
+        create: true
+        pspEnabled: false
+      release:
+        version: 3.4.0
+      serviceAccount:
+        annotations: {}
+        create: true
+        name: null
+    loki-stack:
+      enabled: true
+      filebeat:
+        affinity: {}
+        clusterRoleRules:
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          - nodes
+          - pods
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          verbs:
+          - get
+          - list
+          - watch
+        daemonset:
+          affinity: {}
+          annotations: {}
+          enabled: true
+          envFrom: []
+          extraEnvs: []
+          extraVolumeMounts: []
+          extraVolumes: []
+          filebeatConfig:
+            filebeat.yml: |
+              filebeat.inputs:
+              - type: container
+                paths:
+                  - /var/log/containers/*.log
+                processors:
+                - add_kubernetes_metadata:
+                    host: ${NODE_NAME}
+                    matchers:
+                    - logs_path:
+                        logs_path: "/var/log/containers/"
+  
+              output.elasticsearch:
+                host: '${NODE_NAME}'
+                hosts: '${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
+          hostNetworking: false
+          labels: {}
+          maxUnavailable: 1
+          nodeSelector: {}
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          secretMounts: []
+          securityContext:
+            privileged: false
+            runAsUser: 0
+          tolerations: []
+        deployment:
+          affinity: {}
+          annotations: {}
+          enabled: false
+          envFrom: []
+          extraEnvs: []
+          extraVolumeMounts: []
+          extraVolumes: []
+          filebeatConfig:
+            filebeat.yml: |
+              filebeat.inputs:
+              - type: tcp
+                max_message_size: 10MiB
+                host: "localhost:9000"
+  
+              output.elasticsearch:
+                host: '${NODE_NAME}'
+                hosts: '${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
+          labels: {}
+          nodeSelector: {}
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          secretMounts: []
+          securityContext:
+            privileged: false
+            runAsUser: 0
+          tolerations: []
+        dnsConfig: {}
+        enabled: false
+        envFrom: []
+        extraContainers: ""
+        extraEnvs: []
+        extraInitContainers: []
+        extraVolumeMounts: []
+        extraVolumes: []
+        filebeatConfig:
+          filebeat.yml: |
+            # logging.level: debug
+            filebeat.inputs:
+            - type: container
+              paths:
+                - /var/log/containers/*.log
+              processors:
+              - add_kubernetes_metadata:
+                  host: ${NODE_NAME}
+                  matchers:
+                  - logs_path:
+                      logs_path: "/var/log/containers/"
+            output.logstash:
+              hosts: ["logstash-loki:5044"]
+        fullnameOverride: ""
+        global: {}
+        hostAliases: []
+        hostPathRoot: /var/lib
+        image: docker.elastic.co/beats/filebeat
+        imagePullPolicy: IfNotPresent
+        imagePullSecrets: []
+        imageTag: 7.17.1
+        labels: {}
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - |
+              #!/usr/bin/env bash -e
+              curl --fail 127.0.0.1:5066
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+        managedServiceAccount: true
+        nameOverride: ""
+        nodeSelector: {}
+        podAnnotations: {}
+        podSecurityContext: {}
+        priorityClassName: ""
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - |
+              #!/usr/bin/env bash -e
+              filebeat test output
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+        replicas: 1
+        resources: {}
+        secretMounts: []
+        serviceAccount: ""
+        serviceAccountAnnotations: {}
+        terminationGracePeriod: 30
+        tolerations: []
+        updateStrategy: RollingUpdate
+      fluent-bit:
+        affinity: {}
+        annotations: {}
+        config:
+          autoKubernetesLabels: false
+          batchSize: 1048576
+          batchWait: 1
+          bufChunkSize: 32k
+          bufMaxSize: 32k
+          k8sLoggingExclude: "Off"
+          k8sLoggingParser: "Off"
+          labelMap:
+            kubernetes:
+              container_name: container
+              host: node
+              labels:
+                app: app
+                release: release
+              namespace_name: namespace
+              pod_name: instance
+            stream: stream
+          labels: '{job="fluent-bit"}'
+          lineFormat: json
+          loglevel: warn
+          memBufLimit: 5MB
+          port: 2020
+          removeKeys:
+          - kubernetes
+          - stream
+          tenantID: '""'
+        deploymentStrategy: RollingUpdate
+        enabled: false
+        global: {}
+        image:
+          pullPolicy: IfNotPresent
+          repository: grafana/fluent-bit-plugin-loki
+          tag: 2.1.0-amd64
+        loki:
+          serviceName: ""
+          servicePath: /api/prom/push
+          servicePort: 3100
+          serviceScheme: http
+        nameOverride: fluent-bit-loki
+        nodeSelector: {}
+        podAnnotations:
+          prometheus.io/path: /api/v1/metrics/prometheus
+          prometheus.io/port: "2020"
+          prometheus.io/scrape: "true"
+        podLabels: {}
+        rbac:
+          create: true
+          pspEnabled: true
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        serviceAccount:
+          create: true
+          name: null
+        serviceMonitor:
+          additionalLabels: {}
+          annotations: {}
+          enabled: false
+          interval: ""
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+        volumeMounts:
+        - mountPath: /var/log
+          name: varlog
+        - mountPath: /var/lib/docker/containers
+          name: varlibdockercontainers
+          readOnly: true
+        volumes:
+        - hostPath:
+            path: /var/log
+          name: varlog
+        - hostPath:
+            path: /var/lib/docker/containers
+          name: varlibdockercontainers
+      global: {}
+      grafana:
+        admin:
+          existingSecret: ""
+          passwordKey: admin-password
+          userKey: admin-user
+        adminUser: admin
+        affinity: {}
+        autoscaling:
+          enabled: false
+        containerSecurityContext: {}
+        dashboardProviders: {}
+        dashboards: {}
+        dashboardsConfigMaps: {}
+        datasources: {}
+        deploymentStrategy:
+          type: RollingUpdate
+        downloadDashboards:
+          env: {}
+          envFromSecret: ""
+          resources: {}
+        downloadDashboardsImage:
+          pullPolicy: IfNotPresent
+          repository: curlimages/curl
+          sha: ""
+          tag: 7.73.0
+        enableKubeBackwardCompatibility: false
+        enableServiceLinks: true
+        enabled: false
+        env: {}
+        envFromSecret: ""
+        envFromSecrets: []
+        envRenderSecret: {}
+        envValueFrom: {}
+        extraConfigmapMounts: []
+        extraContainerVolumes: []
+        extraContainers: ""
+        extraEmptyDirMounts: []
+        extraExposePorts: []
+        extraInitContainers: []
+        extraLabels: {}
+        extraObjects: []
+        extraSecretMounts: []
+        extraVolumeMounts: []
+        global: {}
+        grafana.ini:
+          analytics:
+            check_for_updates: true
+          grafana_net:
+            url: https://grafana.net
+          log:
+            mode: console
+          paths:
+            data: /var/lib/grafana/
+            logs: /var/log/grafana
+            plugins: /var/lib/grafana/plugins
+            provisioning: /etc/grafana/provisioning
+        headlessService: false
+        hostAliases: []
+        image:
+          pullPolicy: IfNotPresent
+          repository: grafana/grafana
+          sha: ""
+          tag: 8.3.5
+        imageRenderer:
+          enabled: false
+          env:
+            HTTP_HOST: 0.0.0.0
+          grafanaProtocol: http
+          grafanaSubPath: ""
+          hostAliases: []
+          image:
+            pullPolicy: Always
+            repository: grafana/grafana-image-renderer
+            sha: ""
+            tag: latest
+          networkPolicy:
+            limitEgress: false
+            limitIngress: true
+          podPortName: http
+          priorityClassName: ""
+          replicas: 1
+          resources: {}
+          revisionHistoryLimit: 10
+          securityContext: {}
+          service:
+            enabled: true
+            port: 8081
+            portName: http
+            targetPort: 8081
+          serviceAccountName: ""
+        ingress:
+          annotations: {}
+          enabled: false
+          extraPaths: []
+          hosts:
+          - chart-example.local
+          labels: {}
+          path: /
+          pathType: Prefix
+          tls: []
+        initChownData:
+          enabled: true
+          image:
+            pullPolicy: IfNotPresent
+            repository: busybox
+            sha: ""
+            tag: 1.31.1
+          resources: {}
+        ldap:
+          config: ""
+          enabled: false
+          existingSecret: ""
+        livenessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 60
+          timeoutSeconds: 30
+        namespaceOverride: ""
+        networkPolicy:
+          allowExternal: true
+          enabled: false
+          explicitNamespacesSelector: {}
+        nodeSelector: {}
+        notifiers: {}
+        persistence:
+          accessModes:
+          - ReadWriteOnce
+          enabled: false
+          finalizers:
+          - kubernetes.io/pvc-protection
+          inMemory:
+            enabled: false
+          size: 10Gi
+          type: pvc
+        plugins: []
+        podDisruptionBudget: {}
+        podPortName: grafana
+        rbac:
+          create: true
+          extraClusterRoleRules: []
+          extraRoleRules: []
+          namespaced: false
+          pspEnabled: true
+          pspUseAppArmor: true
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+        replicas: 1
+        resources: {}
+        revisionHistoryLimit: 10
+        securityContext:
+          fsGroup: 472
+          runAsGroup: 472
+          runAsUser: 472
+        service:
+          annotations: {}
+          enabled: true
+          labels: {}
+          port: 80
+          portName: service
+          targetPort: 3000
+          type: ClusterIP
+        serviceAccount:
+          autoMount: true
+          create: true
+          name: null
+          nameTest: null
+        serviceMonitor:
+          enabled: false
+          interval: 1m
+          labels: {}
+          path: /metrics
+          relabelings: []
+          scheme: http
+          scrapeTimeout: 30s
+          tlsConfig: {}
+        sidecar:
+          dashboards:
+            SCProvider: true
+            defaultFolderName: null
+            enabled: false
+            extraMounts: []
+            folder: /tmp/dashboards
+            folderAnnotation: null
+            label: grafana_dashboard
+            labelValue: null
+            provider:
+              allowUiUpdates: false
+              disableDelete: false
+              folder: ""
+              foldersFromFilesStructure: false
+              name: sidecarProvider
+              orgid: 1
+              type: file
+            resource: both
+            script: null
+            searchNamespace: null
+            watchMethod: WATCH
+          datasources:
+            enabled: true
+            initDatasources: false
+            label: grafana_datasource
+            labelValue: null
+            maxLines: 1000
+            reloadURL: http://localhost:3000/api/admin/provisioning/datasources/reload
+            resource: both
+            searchNamespace: null
+            skipReload: false
+            watchMethod: WATCH
+          enableUniqueFilenames: false
+          image:
+            repository: quay.io/kiwigrid/k8s-sidecar
+            sha: ""
+            tag: 1.15.6
+          imagePullPolicy: IfNotPresent
+          notifiers:
+            enabled: false
+            label: grafana_notifier
+            resource: both
+            searchNamespace: null
+          plugins:
+            enabled: false
+            initPlugins: false
+            label: grafana_plugin
+            labelValue: null
+            reloadURL: http://localhost:3000/api/admin/provisioning/plugins/reload
+            resource: both
+            searchNamespace: null
+            skipReload: false
+            watchMethod: WATCH
+          resources: {}
+          securityContext: {}
+        smtp:
+          existingSecret: ""
+          passwordKey: password
+          userKey: user
+        testFramework:
+          enabled: true
+          image: bats/bats
+          imagePullPolicy: IfNotPresent
+          securityContext: {}
+          tag: v1.4.1
+        tolerations: []
+      localpvScConfig:
+        basePath: /var/local/localpv-hostpath/{{ .Release.Name }}/loki
+        name: mayastor-loki-localpv
+        reclaimPolicy: Delete
+        volumeBindingMode: WaitForFirstConsumer
+      logstash:
+        antiAffinity: hard
+        antiAffinityTopologyKey: kubernetes.io/hostname
+        enabled: false
+        envFrom: []
+        extraContainers: []
+        extraEnvs: []
+        extraInitContainers: []
+        extraPorts: []
+        extraVolumeMounts: []
+        extraVolumes: []
+        filters:
+          main: |-
+            filter {
+              if [kubernetes] {
+                mutate {
+                  add_field => {
+                    "container_name" => "%{[kubernetes][container][name]}"
+                    "namespace" => "%{[kubernetes][namespace]}"
+                    "pod" => "%{[kubernetes][pod][name]}"
+                  }
+                  replace => { "host" => "%{[kubernetes][node][name]}"}
+                }
+              }
+              mutate {
+                remove_field => ["tags"]
+              }
+            }
+        fullnameOverride: ""
+        global: {}
+        hostAliases: []
+        httpPort: 9600
+        image: grafana/logstash-output-loki
+        imagePullPolicy: IfNotPresent
+        imagePullSecrets: []
+        imageTag: 1.0.1
+        ingress:
+          annotations: {}
+          className: nginx
+          enabled: false
+          hosts:
+          - host: logstash-example.local
+            paths:
+            - path: /beats
+              servicePort: 5044
+            - path: /http
+              servicePort: 8080
+          pathtype: ImplementationSpecific
+          tls: []
+        labels: {}
+        lifecycle: {}
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        logstashConfig: {}
+        logstashJavaOpts: -Xmx1g -Xms1g
+        logstashPattern: {}
+        logstashPatternDir: /usr/share/logstash/patterns/
+        logstashPipeline: {}
+        maxUnavailable: 1
+        nameOverride: ""
+        nodeAffinity: {}
+        nodeSelector: {}
+        outputs:
+          main: |-
+            output {
+              loki {
+                url => "http://loki:3100/loki/api/v1/push"
+                #username => "test"
+                #password => "test"
+              }
+              # stdout { codec => rubydebug }
+            }
+        persistence:
+          annotations: {}
+          enabled: false
+        podAffinity: {}
+        podAnnotations: {}
+        podManagementPolicy: Parallel
+        podSecurityContext:
+          fsGroup: 1000
+          runAsUser: 1000
+        podSecurityPolicy:
+          create: false
+          name: ""
+          spec:
+            fsGroup:
+              rule: RunAsAny
+            privileged: false
+            runAsUser:
+              rule: RunAsAny
+            seLinux:
+              rule: RunAsAny
+            supplementalGroups:
+              rule: RunAsAny
+            volumes:
+            - secret
+            - configMap
+            - persistentVolumeClaim
+        priorityClassName: ""
+        rbac:
+          annotations: {}
+          create: false
+          serviceAccountAnnotations: {}
+          serviceAccountName: ""
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 3
+          timeoutSeconds: 5
+        replicas: 1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1536Mi
+          requests:
+            cpu: 100m
+            memory: 1536Mi
+        schedulerName: ""
+        secretMounts: []
+        secrets: []
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        service: {}
+        terminationGracePeriod: 120
+        tolerations: []
+        updateStrategy: RollingUpdate
+        volumeClaimTemplate:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+      loki:
+        affinity: {}
+        alerting_groups: []
+        annotations: {}
+        client: {}
+        config:
+          auth_enabled: false
+          chunk_store_config:
+            max_look_back_period: 0s
+          compactor:
+            compaction_interval: 20m
+            retention_delete_delay: 1h
+            retention_delete_worker_count: 50
+            retention_enabled: true
+            shared_store: filesystem
+            working_directory: /data/loki/boltdb-shipper-compactor
+          ingester:
+            chunk_block_size: 262144
+            chunk_idle_period: 3m
+            chunk_retain_period: 1m
+            lifecycler:
+              ring:
+                kvstore:
+                  store: inmemory
+                replication_factor: 1
+            max_transfer_retries: 0
+            wal:
+              dir: /data/loki/wal
+          limits_config:
+            enforce_metric_name: false
+            reject_old_samples: true
+            reject_old_samples_max_age: 168h
+            retention_period: 168h
+          schema_config:
+            configs:
+            - from: "2020-10-24"
+              index:
+                period: 24h
+                prefix: index_
+              object_store: filesystem
+              schema: v11
+              store: boltdb-shipper
+          server:
+            http_listen_port: 3100
+          storage_config:
+            boltdb_shipper:
+              active_index_directory: /data/loki/boltdb-shipper-active
+              cache_location: /data/loki/boltdb-shipper-cache
+              cache_ttl: 24h
+              shared_store: filesystem
+            filesystem:
+              directory: /data/loki/chunks
+          table_manager:
+            retention_deletes_enabled: false
+            retention_period: 0s
+        enabled: true
+        env: []
+        extraArgs: {}
+        extraContainers: []
+        extraPorts: []
+        extraVolumeMounts: []
+        extraVolumes: []
+        global: {}
+        image:
+          pullPolicy: IfNotPresent
+          repository: grafana/loki
+          tag: 2.5.0
+        ingress:
+          annotations: {}
+          enabled: false
+          hosts:
+          - host: chart-example.local
+            paths: []
+          tls: []
+        initContainers:
+        - command:
+          - /bin/bash
+          - -ec
+          - chown -R 1001:1001 /data
+          image: docker.io/bitnami/bitnami-shell:10
+          imagePullPolicy: IfNotPresent
+          name: volume-permissions
+          securityContext:
+            runAsUser: 0
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: storage
+        isDefault: true
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        networkPolicy:
+          enabled: false
+        nodeSelector: {}
+        persistence:
+          accessModes:
+          - ReadWriteOnce
+          annotations: {}
+          enabled: true
+          reclaimPolicy: Delete
+          size: 10Gi
+          storageClassName: mayastor-loki-localpv
+        podAnnotations:
+          prometheus.io/port: http-metrics
+          prometheus.io/scrape: "true"
+        podDisruptionBudget: {}
+        podLabels: {}
+        podManagementPolicy: OrderedReady
+        priorityClassName: ""
+        rbac:
+          create: true
+          pspEnabled: false
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        replicas: 1
+        resources: {}
+        securityContext:
+          fsGroup: 1001
+          runAsGroup: 1001
+          runAsNonRoot: false
+          runAsUser: 1001
+        service:
+          annotations: {}
+          labels: {}
+          nodePort: 31001
+          port: 3100
+          targetPort: http-metrics
+          type: ClusterIP
+        serviceAccount:
+          annotations: {}
+          automountServiceAccountToken: true
+          create: true
+          name: null
+        serviceMonitor:
+          additionalLabels: {}
+          annotations: {}
+          enabled: false
+          interval: ""
+          prometheusRule:
+            additionalLabels: {}
+            enabled: false
+            rules: []
+        terminationGracePeriodSeconds: 4800
+        tolerations: []
+        tracing:
+          jaegerAgentHost: null
+        updateStrategy:
+          type: RollingUpdate
+        useExistingAlertingGroup:
+          configmapName: ""
+          enabled: false
+      prometheus:
+        alertRelabelConfigs: null
+        alertmanager:
+          affinity: {}
+          baseURL: http://localhost:9093
+          clusterPeers: []
+          configFileName: alertmanager.yml
+          configFromSecret: ""
+          configMapOverrideName: ""
+          deploymentAnnotations: {}
+          dnsConfig: {}
+          emptyDir:
+            sizeLimit: ""
+          enabled: true
+          extraArgs: {}
+          extraConfigmapMounts: []
+          extraEnv: {}
+          extraInitContainers: []
+          extraSecretMounts: []
+          image:
+            pullPolicy: IfNotPresent
+            repository: quay.io/prometheus/alertmanager
+            tag: v0.23.0
+          ingress:
+            annotations: {}
+            enabled: false
+            extraLabels: {}
+            extraPaths: []
+            hosts: []
+            path: /
+            pathType: Prefix
+            tls: []
+          name: alertmanager
+          nodeSelector: {}
+          persistentVolume:
+            accessModes:
+            - ReadWriteOnce
+            annotations: {}
+            enabled: true
+            existingClaim: ""
+            mountPath: /data
+            size: 2Gi
+            subPath: ""
+          podAnnotations: {}
+          podDisruptionBudget:
+            enabled: false
+            maxUnavailable: 1
+          podLabels: {}
+          podSecurityPolicy:
+            annotations: {}
+          prefixURL: ""
+          priorityClassName: ""
+          probeHeaders: []
+          replicaCount: 1
+          resources: {}
+          securityContext:
+            fsGroup: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+            runAsUser: 65534
+          service:
+            annotations: {}
+            clusterIP: ""
+            externalIPs: []
+            labels: {}
+            loadBalancerIP: ""
+            loadBalancerSourceRanges: []
+            servicePort: 80
+            sessionAffinity: None
+            type: ClusterIP
+          statefulSet:
+            annotations: {}
+            enabled: false
+            headless:
+              annotations: {}
+              enableMeshPeer: false
+              labels: {}
+              servicePort: 80
+            labels: {}
+            podManagementPolicy: OrderedReady
+          tolerations: []
+          useClusterRole: true
+          useExistingRole: false
+        alertmanagerFiles:
+          alertmanager.yml:
+            global: {}
+            receivers:
+            - name: default-receiver
+            route:
+              group_interval: 5m
+              group_wait: 10s
+              receiver: default-receiver
+              repeat_interval: 3h
+        configmapReload:
+          alertmanager:
+            enabled: true
+            extraArgs: {}
+            extraConfigmapMounts: []
+            extraVolumeDirs: []
+            image:
+              pullPolicy: IfNotPresent
+              repository: jimmidyson/configmap-reload
+              tag: v0.5.0
+            name: configmap-reload
+            resources: {}
+          prometheus:
+            enabled: true
+            extraArgs: {}
+            extraConfigmapMounts: []
+            extraVolumeDirs: []
+            image:
+              pullPolicy: IfNotPresent
+              repository: jimmidyson/configmap-reload
+              tag: v0.5.0
+            name: configmap-reload
+            resources: {}
+        enabled: false
+        extraScrapeConfigs: null
+        forceNamespace: null
+        global: {}
+        imagePullSecrets: null
+        isDefault: false
+        kube-state-metrics:
+          affinity: {}
+          autosharding:
+            enabled: false
+          collectors:
+          - certificatesigningrequests
+          - configmaps
+          - cronjobs
+          - daemonsets
+          - deployments
+          - endpoints
+          - horizontalpodautoscalers
+          - ingresses
+          - jobs
+          - limitranges
+          - mutatingwebhookconfigurations
+          - namespaces
+          - networkpolicies
+          - nodes
+          - persistentvolumeclaims
+          - persistentvolumes
+          - poddisruptionbudgets
+          - pods
+          - replicasets
+          - replicationcontrollers
+          - resourcequotas
+          - secrets
+          - services
+          - statefulsets
+          - storageclasses
+          - validatingwebhookconfigurations
+          - volumeattachments
+          containerSecurityContext: {}
+          customLabels: {}
+          extraArgs: []
+          global: {}
+          hostNetwork: false
+          image:
+            pullPolicy: IfNotPresent
+            repository: k8s.gcr.io/kube-state-metrics/kube-state-metrics
+            tag: v2.3.0
+          imagePullSecrets: []
+          kubeTargetVersionOverride: ""
+          kubeconfig:
+            enabled: false
+            secret: null
+          metricAllowlist: []
+          metricAnnotationsAllowList: []
+          metricDenylist: []
+          metricLabelsAllowlist: []
+          namespaceOverride: ""
+          namespaces: ""
+          nodeSelector: {}
+          podAnnotations: {}
+          podDisruptionBudget: {}
+          podSecurityPolicy:
+            additionalVolumes: []
+            annotations: {}
+            enabled: false
+          prometheus:
+            monitor:
+              additionalLabels: {}
+              enabled: false
+              honorLabels: false
+              interval: ""
+              jobLabel: ""
+              metricRelabelings: []
+              namespace: ""
+              proxyUrl: ""
+              relabelings: []
+              scrapeTimeout: ""
+              selectorOverride: {}
+          prometheusScrape: true
+          rbac:
+            create: true
+            useClusterRole: true
+          releaseLabel: false
+          replicas: 1
+          resources: {}
+          securityContext:
+            enabled: true
+            fsGroup: 65534
+            runAsGroup: 65534
+            runAsUser: 65534
+          selfMonitor:
+            enabled: false
+          service:
+            annotations: {}
+            loadBalancerIP: ""
+            nodePort: 0
+            port: 8080
+            type: ClusterIP
+          serviceAccount:
+            annotations: {}
+            create: true
+            imagePullSecrets: []
+            name: null
+          tolerations: []
+        kubeStateMetrics:
+          enabled: true
+        networkPolicy:
+          enabled: false
+        nodeExporter:
+          dnsConfig: {}
+          enabled: true
+          extraArgs: {}
+          extraConfigmapMounts: []
+          extraHostPathMounts: []
+          extraInitContainers: []
+          hostNetwork: true
+          hostPID: true
+          hostRootfs: true
+          image:
+            pullPolicy: IfNotPresent
+            repository: quay.io/prometheus/node-exporter
+            tag: v1.3.0
+          name: node-exporter
+          nodeSelector: {}
+          pod:
+            labels: {}
+          podAnnotations: {}
+          podDisruptionBudget:
+            enabled: false
+            maxUnavailable: 1
+          podSecurityPolicy:
+            annotations: {}
+          priorityClassName: ""
+          resources: {}
+          securityContext:
+            fsGroup: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+            runAsUser: 65534
+          service:
+            annotations:
+              prometheus.io/scrape: "true"
+            clusterIP: None
+            externalIPs: []
+            hostPort: 9100
+            labels: {}
+            loadBalancerIP: ""
+            loadBalancerSourceRanges: []
+            servicePort: 9100
+            type: ClusterIP
+          tolerations: []
+          updateStrategy:
+            type: RollingUpdate
+        podSecurityPolicy:
+          enabled: false
+        pushgateway:
+          deploymentAnnotations: {}
+          dnsConfig: {}
+          enabled: true
+          extraArgs: {}
+          extraInitContainers: []
+          image:
+            pullPolicy: IfNotPresent
+            repository: prom/pushgateway
+            tag: v1.4.2
+          ingress:
+            annotations: {}
+            enabled: false
+            extraPaths: []
+            hosts: []
+            path: /
+            pathType: Prefix
+            tls: []
+          name: pushgateway
+          nodeSelector: {}
+          persistentVolume:
+            accessModes:
+            - ReadWriteOnce
+            annotations: {}
+            enabled: false
+            existingClaim: ""
+            mountPath: /data
+            size: 2Gi
+            subPath: ""
+          podAnnotations: {}
+          podDisruptionBudget:
+            enabled: false
+            maxUnavailable: 1
+          podLabels: {}
+          podSecurityPolicy:
+            annotations: {}
+          priorityClassName: ""
+          replicaCount: 1
+          resources: {}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+          service:
+            annotations:
+              prometheus.io/probe: pushgateway
+            clusterIP: ""
+            externalIPs: []
+            labels: {}
+            loadBalancerIP: ""
+            loadBalancerSourceRanges: []
+            servicePort: 9091
+            type: ClusterIP
+          tolerations: []
+          verticalAutoscaler:
+            enabled: false
+        rbac:
+          create: true
+        ruleFiles: {}
+        server:
+          affinity: {}
+          alertmanagers: []
+          baseURL: ""
+          configMapOverrideName: ""
+          configPath: /etc/config/prometheus.yml
+          defaultFlagsOverride: []
+          deploymentAnnotations: {}
+          dnsConfig: {}
+          dnsPolicy: ClusterFirst
+          emptyDir:
+            sizeLimit: ""
+          enableServiceLinks: true
+          enabled: true
+          env: []
+          extraArgs: {}
+          extraConfigmapMounts: []
+          extraFlags:
+          - web.enable-lifecycle
+          extraHostPathMounts: []
+          extraInitContainers: []
+          extraSecretMounts: []
+          extraVolumeMounts: []
+          extraVolumes: []
+          global:
+            evaluation_interval: 1m
+            scrape_interval: 1m
+            scrape_timeout: 10s
+          hostAliases: []
+          hostNetwork: false
+          image:
+            pullPolicy: IfNotPresent
+            repository: quay.io/prometheus/prometheus
+            tag: v2.34.0
+          ingress:
+            annotations: {}
+            enabled: false
+            extraLabels: {}
+            extraPaths: []
+            hosts: []
+            path: /
+            pathType: Prefix
+            tls: []
+          livenessProbeFailureThreshold: 3
+          livenessProbeInitialDelay: 30
+          livenessProbePeriodSeconds: 15
+          livenessProbeSuccessThreshold: 1
+          livenessProbeTimeout: 10
+          name: server
+          nodeSelector: {}
+          persistentVolume:
+            accessModes:
+            - ReadWriteOnce
+            annotations: {}
+            enabled: true
+            existingClaim: ""
+            mountPath: /data
+            size: 8Gi
+            subPath: ""
+          podAnnotations: {}
+          podDisruptionBudget:
+            enabled: false
+            maxUnavailable: 1
+          podLabels: {}
+          podSecurityPolicy:
+            annotations: {}
+          prefixURL: ""
+          priorityClassName: ""
+          probeHeaders: []
+          probeScheme: HTTP
+          readinessProbeFailureThreshold: 3
+          readinessProbeInitialDelay: 30
+          readinessProbePeriodSeconds: 5
+          readinessProbeSuccessThreshold: 1
+          readinessProbeTimeout: 4
+          remoteRead: []
+          remoteWrite: []
+          replicaCount: 1
+          resources: {}
+          retention: 15d
+          securityContext:
+            fsGroup: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+            runAsUser: 65534
+          service:
+            annotations: {}
+            clusterIP: ""
+            externalIPs: []
+            gRPC:
+              enabled: false
+              servicePort: 10901
+            labels: {}
+            loadBalancerIP: ""
+            loadBalancerSourceRanges: []
+            servicePort: 80
+            sessionAffinity: None
+            statefulsetReplica:
+              enabled: false
+              replica: 0
+            type: ClusterIP
+          sidecarContainers: {}
+          sidecarTemplateValues: {}
+          startupProbe:
+            enabled: false
+            failureThreshold: 30
+            periodSeconds: 5
+            timeoutSeconds: 10
+          statefulSet:
+            annotations: {}
+            enabled: false
+            headless:
+              annotations: {}
+              gRPC:
+                enabled: false
+                servicePort: 10901
+              labels: {}
+              servicePort: 80
+            labels: {}
+            podManagementPolicy: OrderedReady
+          storagePath: ""
+          tcpSocketProbeEnabled: false
+          terminationGracePeriodSeconds: 300
+          tolerations: []
+          verticalAutoscaler:
+            enabled: false
+        serverFiles:
+          alerting_rules.yml: {}
+          alerts: {}
+          prometheus.yml:
+            rule_files:
+            - /etc/config/recording_rules.yml
+            - /etc/config/alerting_rules.yml
+            - /etc/config/rules
+            - /etc/config/alerts
+            scrape_configs:
+            - job_name: prometheus
+              static_configs:
+              - targets:
+                - localhost:9090
+            - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              job_name: kubernetes-apiservers
+              kubernetes_sd_configs:
+              - role: endpoints
+              relabel_configs:
+              - action: keep
+                regex: default;kubernetes;https
+                source_labels:
+                - __meta_kubernetes_namespace
+                - __meta_kubernetes_service_name
+                - __meta_kubernetes_endpoint_port_name
+              scheme: https
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
+            - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              job_name: kubernetes-nodes
+              kubernetes_sd_configs:
+              - role: node
+              relabel_configs:
+              - action: labelmap
+                regex: __meta_kubernetes_node_label_(.+)
+              - replacement: kubernetes.default.svc:443
+                target_label: __address__
+              - regex: (.+)
+                replacement: /api/v1/nodes/$1/proxy/metrics
+                source_labels:
+                - __meta_kubernetes_node_name
+                target_label: __metrics_path__
+              scheme: https
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
+            - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              job_name: kubernetes-nodes-cadvisor
+              kubernetes_sd_configs:
+              - role: node
+              relabel_configs:
+              - action: labelmap
+                regex: __meta_kubernetes_node_label_(.+)
+              - replacement: kubernetes.default.svc:443
+                target_label: __address__
+              - regex: (.+)
+                replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+                source_labels:
+                - __meta_kubernetes_node_name
+                target_label: __metrics_path__
+              scheme: https
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
+            - job_name: kubernetes-service-endpoints
+              kubernetes_sd_configs:
+              - role: endpoints
+              relabel_configs:
+              - action: keep
+                regex: true
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scrape
+              - action: drop
+                regex: true
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scrape_slow
+              - action: replace
+                regex: (https?)
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scheme
+                target_label: __scheme__
+              - action: replace
+                regex: (.+)
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_path
+                target_label: __metrics_path__
+              - action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                source_labels:
+                - __address__
+                - __meta_kubernetes_service_annotation_prometheus_io_port
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
+                replacement: __param_$1
+              - action: labelmap
+                regex: __meta_kubernetes_service_label_(.+)
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_service_name
+                target_label: service
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_pod_node_name
+                target_label: node
+            - job_name: kubernetes-service-endpoints-slow
+              kubernetes_sd_configs:
+              - role: endpoints
+              relabel_configs:
+              - action: keep
+                regex: true
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scrape_slow
+              - action: replace
+                regex: (https?)
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scheme
+                target_label: __scheme__
+              - action: replace
+                regex: (.+)
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_path
+                target_label: __metrics_path__
+              - action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                source_labels:
+                - __address__
+                - __meta_kubernetes_service_annotation_prometheus_io_port
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
+                replacement: __param_$1
+              - action: labelmap
+                regex: __meta_kubernetes_service_label_(.+)
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_service_name
+                target_label: service
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_pod_node_name
+                target_label: node
+              scrape_interval: 5m
+              scrape_timeout: 30s
+            - honor_labels: true
+              job_name: prometheus-pushgateway
+              kubernetes_sd_configs:
+              - role: service
+              relabel_configs:
+              - action: keep
+                regex: pushgateway
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_probe
+            - job_name: kubernetes-services
+              kubernetes_sd_configs:
+              - role: service
+              metrics_path: /probe
+              params:
+                module:
+                - http_2xx
+              relabel_configs:
+              - action: keep
+                regex: true
+                source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_probe
+              - source_labels:
+                - __address__
+                target_label: __param_target
+              - replacement: blackbox
+                target_label: __address__
+              - source_labels:
+                - __param_target
+                target_label: instance
+              - action: labelmap
+                regex: __meta_kubernetes_service_label_(.+)
+              - source_labels:
+                - __meta_kubernetes_namespace
+                target_label: namespace
+              - source_labels:
+                - __meta_kubernetes_service_name
+                target_label: service
+            - job_name: kubernetes-pods
+              kubernetes_sd_configs:
+              - role: pod
+              relabel_configs:
+              - action: keep
+                regex: true
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+              - action: drop
+                regex: true
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scrape_slow
+              - action: replace
+                regex: (https?)
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+                target_label: __scheme__
+              - action: replace
+                regex: (.+)
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_path
+                target_label: __metrics_path__
+              - action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                source_labels:
+                - __address__
+                - __meta_kubernetes_pod_annotation_prometheus_io_port
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
+                replacement: __param_$1
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: drop
+                regex: Pending|Succeeded|Failed|Completed
+                source_labels:
+                - __meta_kubernetes_pod_phase
+            - job_name: kubernetes-pods-slow
+              kubernetes_sd_configs:
+              - role: pod
+              relabel_configs:
+              - action: keep
+                regex: true
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scrape_slow
+              - action: replace
+                regex: (https?)
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+                target_label: __scheme__
+              - action: replace
+                regex: (.+)
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_path
+                target_label: __metrics_path__
+              - action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                source_labels:
+                - __address__
+                - __meta_kubernetes_pod_annotation_prometheus_io_port
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
+                replacement: __param_$1
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: drop
+                regex: Pending|Succeeded|Failed|Completed
+                source_labels:
+                - __meta_kubernetes_pod_phase
+              scrape_interval: 5m
+              scrape_timeout: 30s
+          recording_rules.yml: {}
+          rules: {}
+        serviceAccounts:
+          alertmanager:
+            annotations: {}
+            create: true
+            name: null
+          nodeExporter:
+            annotations: {}
+            create: true
+            name: null
+          pushgateway:
+            annotations: {}
+            create: true
+            name: null
+          server:
+            annotations: {}
+            create: true
+            name: null
+      promtail:
+        affinity: {}
+        annotations: {}
+        config:
+          file: |
+            server:
+              log_level: {{ .Values.config.logLevel }}
+              http_listen_port: {{ .Values.config.serverPort }}
+  
+            client:
+              url: {{ tpl .Values.config.lokiAddress . }}
+              {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
+  
+            positions:
+              filename: /run/promtail/positions.yaml
+  
+            scrape_configs:
+              {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
+              {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
+          logLevel: info
+          lokiAddress: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
+          serverPort: 3101
+          snippets:
+            addScrapeJobLabel: false
+            common:
+            - action: replace
+              source_labels:
+              - __meta_kubernetes_pod_node_name
+              target_label: node_name
+            - action: replace
+              source_labels:
+              - __meta_kubernetes_namespace
+              target_label: namespace
+            - action: replace
+              replacement: $1
+              separator: /
+              source_labels:
+              - namespace
+              - app
+              target_label: job
+            - action: replace
+              source_labels:
+              - __meta_kubernetes_pod_name
+              target_label: pod
+            - action: replace
+              source_labels:
+              - __meta_kubernetes_pod_container_name
+              target_label: container
+            - action: replace
+              replacement: /var/log/pods/*$1/*.log
+              separator: /
+              source_labels:
+              - __meta_kubernetes_pod_uid
+              - __meta_kubernetes_pod_container_name
+              target_label: __path__
+            - action: replace
+              regex: true/(.*)
+              replacement: /var/log/pods/*$1/*.log
+              separator: /
+              source_labels:
+              - __meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash
+              - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
+              - __meta_kubernetes_pod_container_name
+              target_label: __path__
+            extraClientConfigs: ""
+            extraRelabelConfigs: []
+            extraScrapeConfigs: ""
+            pipelineStages:
+            - cri: {}
+            scrapeConfigs: |
+              - job_name: {{ .Release.Name }}-pods-name
+                pipeline_stages:
+                  - docker: {}
+                kubernetes_sd_configs:
+                - role: pod
+                relabel_configs:
+                - source_labels:
+                  - __meta_kubernetes_pod_node_name
+                  target_label: hostname
+                  action: replace
+                - action: labelmap
+                  regex: __meta_kubernetes_pod_label_(.+)
+                - action: keep
+                  source_labels:
+                  - __meta_kubernetes_pod_label_openebs_io_logging
+                  regex: true
+                  target_label: {{ .Release.Name }}_component
+                - action: replace
+                  replacement: $1
+                  separator: /
+                  source_labels:
+                  - __meta_kubernetes_namespace
+                  target_label: job
+                - action: replace
+                  source_labels:
+                  - __meta_kubernetes_pod_name
+                  target_label: pod
+                - action: replace
+                  source_labels:
+                  - __meta_kubernetes_pod_container_name
+                  target_label: container
+                - replacement: /var/log/pods/*$1/*.log
+                  separator: /
+                  source_labels:
+                  - __meta_kubernetes_pod_uid
+                  - __meta_kubernetes_pod_container_name
+                  target_label: __path__
+        containerSecurityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        defaultVolumeMounts:
+        - mountPath: /var/lib/docker/containers
+          name: containers
+          readOnly: true
+        - mountPath: /var/log/pods
+          name: pods
+          readOnly: true
+        defaultVolumes:
+        - hostPath:
+            path: /var/lib/docker/containers
+          name: containers
+        - hostPath:
+            path: /var/log/pods
+          name: pods
+        enabled: true
+        extraArgs: []
+        extraEnv: []
+        extraEnvFrom: []
+        extraObjects: []
+        extraPorts: {}
+        extraVolumeMounts: []
+        extraVolumes: []
+        fullnameOverride: null
+        global: {}
+        image:
+          pullPolicy: IfNotPresent
+          registry: docker.io
+          repository: grafana/promtail
+          tag: null
+        imagePullSecrets: []
+        initContainer:
+          enabled: false
+          fsInotifyMaxUserInstances: 128
+          image:
+            pullPolicy: IfNotPresent
+            registry: docker.io
+            repository: busybox
+            tag: 1.33
+        livenessProbe: {}
+        nameOverride: null
+        networkPolicy:
+          enabled: false
+          k8sApi:
+            cidrs: []
+            port: 8443
+          metrics:
+            cidrs: []
+            namespaceSelector: {}
+            podSelector: {}
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels: {}
+        podSecurityContext:
+          runAsGroup: 0
+          runAsUser: 0
+        podSecurityPolicy:
+          allowPrivilegeEscalation: true
+          fsGroup:
+            rule: RunAsAny
+          hostIPC: false
+          hostNetwork: false
+          hostPID: false
+          privileged: true
+          readOnlyRootFilesystem: true
+          requiredDropCapabilities:
+          - ALL
+          runAsUser:
+            rule: RunAsAny
+          seLinux:
+            rule: RunAsAny
+          supplementalGroups:
+            rule: RunAsAny
+          volumes:
+          - secret
+          - hostPath
+          - downwardAPI
+        priorityClassName: ""
+        rbac:
+          create: true
+          pspEnabled: false
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        serviceAccount:
+          annotations: {}
+          create: true
+          imagePullSecrets: []
+          name: null
+        serviceMonitor:
+          annotations: {}
+          enabled: false
+          interval: null
+          labels: {}
+          namespace: null
+          namespaceSelector: {}
+          relabelings: []
+          scrapeTimeout: null
+        tolerations: []
+        updateStrategy: {}
+    nats:
+      additionalContainers: []
+      additionalVolumeMounts: []
+      additionalVolumes: []
+      advertiseconfigVolume:
+        emptyDir: {}
+      affinity: {}
+      auth:
+        enabled: false
+        resolver:
+          allowDelete: false
+          interval: 2m
+          operator: null
+          store:
+            dir: /accounts/jwt
+            size: 1Gi
+          systemAccount: null
+          type: none
+      bootconfig:
+        image:
+          pullPolicy: IfNotPresent
+          repository: natsio/nats-boot-config
+          tag: 0.10.1
+        resources: {}
+        securityContext: {}
+      cluster:
+        enabled: true
+        extraRoutes: []
+        noAdvertise: false
+        replicas: 3
+      commonLabels: {}
+      exporter:
+        args: []
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          repository: natsio/prometheus-nats-exporter
+          tag: 0.11.0
+        portName: metrics
+        resources: {}
+        securityContext: {}
+        serviceMonitor:
+          annotations: {}
+          enabled: false
+          labels: {}
+          path: /metrics
+      gateway:
+        enabled: false
+        name: default
+        port: 7522
+      global: {}
+      imagePullSecrets: []
+      k8sClusterDomain: cluster.local
+      leafnodes:
+        enabled: false
+        noAdvertise: false
+        port: 7422
+      mqtt:
+        ackWait: 1m
+        enabled: false
+        maxAckPending: 100
+      nameOverride: ""
+      namespaceOverride: ""
+      nats:
+        advertise: true
+        client:
+          port: 4222
+          portName: client
+        configChecksumAnnotation: true
+        connectRetries: 120
+        dnsPolicy: ClusterFirst
+        externalAccess: false
+        extraEnv: []
+        healthcheck:
+          detectHealthz: true
+          enableHealthz: true
+          enableHealthzLivenessReadiness: false
+          liveness:
+            enabled: true
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          readiness:
+            enabled: true
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          startup:
+            enabled: true
+            failureThreshold: 90
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+        hostNetwork: false
+        image:
+          pullPolicy: IfNotPresent
+          registry: ""
+          repository: nats
+          tag: 2.9.17-alpine
+        jetstream:
+          domain: null
+          enabled: true
+          encryption: null
+          fileStorage:
+            accessModes:
+            - ReadWriteOnce
+            annotations: null
+            enabled: false
+            size: 10Gi
+            storageDirectory: /data
+          max_outstanding_catchup: null
+          memStorage:
+            enabled: true
+            size: 5Mi
+          uniqueTag: null
+        limits:
+          lameDuckDuration: 30s
+          lameDuckGracePeriod: 10s
+          maxConnections: null
+          maxControlLine: null
+          maxPayload: null
+          maxPending: null
+          maxPings: null
+          maxSubscriptions: null
+          pingInterval: null
+          writeDeadline: null
+        logging:
+          connectErrorReports: null
+          debug: null
+          logtime: null
+          reconnectErrorReports: null
+          trace: null
+        mappings: {}
+        profiling:
+          enabled: false
+          port: 6000
+        resources: {}
+        securityContext: {}
+        selectorLabels: {}
+        serverNamePrefix: ""
+        serverTags: null
+        serviceAccount:
+          annotations: {}
+          create: true
+          name: ""
+        terminationGracePeriodSeconds: 60
+      natsbox:
+        additionalLabels: {}
+        affinity: {}
+        annotations: {}
+        enabled: false
+        extraVolumeMounts: []
+        extraVolumes: []
+        image:
+          pullPolicy: IfNotPresent
+          repository: natsio/nats-box
+          tag: 0.13.8
+        imagePullSecrets: []
+        nodeSelector: {}
+        podAnnotations: {}
+        podLabels: {}
+        resources: {}
+        securityContext: {}
+        tolerations: []
+      networkPolicy:
+        allowExternal: true
+        enabled: false
+        extraEgress: []
+        extraIngress: []
+        ingressNSMatchLabels: {}
+        ingressNSPodMatchLabels: {}
+      nodeSelector: {}
+      pidVolume:
+        emptyDir: {}
+      podAnnotations: {}
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 1
+      podManagementPolicy: Parallel
+      priorityClassName: null
+      reloader:
+        enabled: true
+        extraConfigs: []
+        image:
+          pullPolicy: IfNotPresent
+          repository: natsio/nats-server-config-reloader
+          tag: 0.10.1
+        resources: {}
+        securityContext: {}
+      securityContext: {}
+      serviceAnnotations: {}
+      statefulSetAnnotations: {}
+      statefulSetPodLabels: {}
+      tolerations: []
+      topologyKeys: []
+      topologySpreadConstraints: []
+      useFQDN: true
+      websocket:
+        allowedOrigins: []
+        enabled: false
+        noTLS: true
+        port: 443
+        sameOrigin: false
+    nodeSelector:
+      kubernetes.io/arch: amd64
+    obs:
+      callhome:
+        enabled: true
+        logLevel: info
+        priorityClassName: ""
+        resources:
+          limits:
+            cpu: 100m
+            memory: 32Mi
+          requests:
+            cpu: 50m
+            memory: 16Mi
+        sendReport: true
+        tolerations: []
+      stats:
+        logLevel: info
+        resources:
+          limits:
+            cpu: 100m
+            memory: 32Mi
+          requests:
+            cpu: 50m
+            memory: 16Mi
+        service:
+          nodePorts:
+            http: 90011
+            https: 90010
+          type: ClusterIP
+    operators:
+      pool:
+        logLevel: info
+        priorityClassName: ""
+        resources:
+          limits:
+            cpu: 100m
+            memory: 32Mi
+          requests:
+            cpu: 50m
+            memory: 16Mi
+        tolerations: []
+    priorityClassName: ""
+    tolerations: []
+  ndm:
+    enabled: true
+    filters:
+      enableOsDiskExcludeFilter: true
+      enablePathFilter: true
+      enableVendorFilter: true
+      excludePaths: /dev/loop,/dev/fd0,/dev/sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd
+      excludeVendors: CLOUDBYT,OpenEBS
+      includePaths: ""
+      osDiskExcludePaths: /,/etc/hosts,/boot
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
+    image: openebs/node-disk-manager
+    imageTag: 2.1.0
+    nodeSelector: {}
+    probes:
+      enableSeachest: false
+    resources: {}
+    sparse:
+      count: "0"
+      path: /var/openebs/sparse
+      size: "10737418240"
+    tolerations: []
+  ndmExporter:
+    clusterExporter:
+      metricsPort: 9100
+      name: ndm-cluster-exporter
+      podLabels:
+        name: openebs-ndm-cluster-exporter
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      registry: null
+      repository: openebs/node-disk-exporter
+      tag: 2.1.0
+    nodeExporter:
+      metricsPort: 9101
+      name: ndm-node-exporter
+      podLabels:
+        name: openebs-ndm-node-exporter
+  ndmOperator:
+    enabled: true
+    healthCheck:
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    image: openebs/node-disk-operator
+    imageTag: 2.1.0
+    nodeSelector: {}
+    readinessCheck:
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    replicas: 1
+    resources: {}
+    tolerations: []
+    upgradeStrategy: Recreate
+  nfs-provisioner:
+    analytics:
+      enabled: "true"
+    enabled: false
+    fullnameOverride: ""
+    global: {}
+    imagePullSecrets: null
+    nameOverride: ""
+    nfsProvisioner:
+      affinity: {}
+      annotations: {}
+      enableLeaderElection: "true"
+      enabled: true
+      healthCheck:
+        initialDelaySeconds: 30
+        periodSeconds: 60
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/provisioner-nfs
+        tag: null
+      name: nfs-provisioner
+      nfsHookConfigMap: ""
+      nfsServerAlpineImage:
+        registry: null
+        repository: openebs/nfs-server-alpine
+        tag: null
+      nodeSelector: {}
+      podLabels:
+        name: openebs-nfs-provisioner
+      privileged: true
+      resources: null
+      tolerations: []
+    nfsServer:
+      imagePullSecret: ""
+      useClusterIP: "true"
+    nfsStorageClass:
+      backendStorageClass: ""
+      customServerConfig: ""
+      filePermissions: {}
+      graceTime: null
+      isDefaultClass: false
+      leaseTime: null
+      name: openebs-kernel-nfs
+      nfsServerResources: {}
+      nfsServerType: kernel
+      reclaimPolicy: Delete
+    podSecurityContext: {}
+    rbac:
+      create: true
+      pspEnabled: false
+    serviceAccount:
+      annotations: {}
+      create: true
+      name: null
+  openebs-ndm:
+    crd:
+      enableInstall: false
+    enabled: false
+    featureGates:
+      APIService:
+        address: 0.0.0.0:9115
+        enabled: false
+        featureGateFlag: APIService
+      ChangeDetection:
+        enabled: false
+        featureGateFlag: ChangeDetection
+      GPTBasedUUID:
+        enabled: true
+        featureGateFlag: GPTBasedUUID
+      PartitionTableUUID:
+        enabled: false
+        featureGateFlag: PartitionTableUUID
+      UseOSDisk:
+        enabled: false
+        featureGateFlag: UseOSDisk
+      enabled: true
+    global: {}
+    helperPod:
+      image:
+        pullPolicy: IfNotPresent
+        registry: ""
+        repository: openebs/linux-utils
+        tag: 3.4.0
+    imagePullSecrets: null
+    ndm:
+      annotations: {}
+      componentName: ndm
+      enabled: true
+      filters:
+        enableOsDiskExcludeFilter: true
+        enablePathFilter: true
+        enableVendorFilter: true
+        excludePaths: loop,fd0,sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd
+        excludeVendors: CLOUDBYT,OpenEBS
+        includePaths: ""
+        osDiskExcludePaths: /,/etc/hosts,/boot
+      healthCheck:
+        initialDelaySeconds: 30
+        periodSeconds: 60
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/node-disk-manager
+        tag: 2.1.0
+      metaConfig:
+        deviceLabelTypes: ""
+        nodeLabelPattern: ""
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels:
+        name: openebs-ndm
+      probes:
+        enableSeachest: false
+        enableSmartProbe: true
+        enableUdevProbe: true
+      resources: {}
+      securityContext: {}
+      sparse:
+        count: "0"
+        path: /var/openebs/sparse
+        size: "10737418240"
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+    ndmExporter:
+      clusterExporter:
+        metricsPort: 9100
+        name: cluster-exporter
+        nodeSelector: {}
+        podLabels:
+          name: openebs-ndm-cluster-exporter
+        tolerations: []
+      enabled: false
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/node-disk-exporter
+        tag: 2.1.0
+      nodeExporter:
+        metricsPort: 9101
+        name: node-exporter
+        nodeSelector: {}
+        podLabels:
+          name: openebs-ndm-node-exporter
+        tolerations: []
+    ndmOperator:
+      annotations: {}
+      enabled: true
+      healthCheck:
+        initialDelaySeconds: 15
+        periodSeconds: 20
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/node-disk-operator
+        tag: 2.1.0
+      name: operator
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels:
+        name: openebs-ndm-operator
+      readinessCheck:
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      replicas: 1
+      resources: {}
+      securityContext: {}
+      tolerations: []
+      upgradeStrategy: Recreate
+    release:
+      version: 2.1.0
+    serviceAccount:
+      create: true
+      name: openebs-ndm
+    varDirectoryPath:
+      baseDir: /var/openebs
+  policies:
+    monitoring:
+      enabled: true
+      image: openebs/m-exporter
+      imageTag: 2.12.2
+  provisioner:
+    affinity: {}
+    enableLeaderElection: true
+    enabled: true
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
+    image: openebs/openebs-k8s-provisioner
+    imageTag: 2.12.2
+    nodeSelector: {}
+    patchJivaNodeAffinity: enabled
+    replicas: 1
+    resources: {}
+    tolerations: []
+  rbac:
+    create: true
+    kyvernoEnabled: false
+    pspEnabled: false
+  release:
+    version: 3.9.0
+  serviceAccount:
+    create: true
+    name: null
+  snapshotOperator:
+    affinity: {}
+    controller:
+      image: openebs/snapshot-controller
+      imageTag: 2.12.2
+      resources: {}
+    enableLeaderElection: true
+    enabled: true
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
+    nodeSelector: {}
+    provisioner:
+      image: openebs/snapshot-provisioner
+      imageTag: 2.12.2
+      resources: {}
+    replicas: 1
+    tolerations: []
+    upgradeStrategy: Recreate
+  varDirectoryPath:
+    baseDir: /var/openebs
+  webhook:
+    affinity: {}
+    enabled: true
+    failurePolicy: Fail
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
+    hostNetwork: false
+    image: openebs/admission-server
+    imageTag: 2.12.2
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    tolerations: []
+  zfs-localpv:
+    analytics:
+      enabled: true
+    crd:
+      enableInstall: true
+    enabled: false
+    feature:
+      storageCapacity: true
+    global: {}
+    imagePullSecrets: null
+    rbac:
+      pspEnabled: false
+    release:
+      version: 2.3.1
+    role: openebs-zfs
+    serviceAccount:
+      zfsController:
+        create: true
+        name: openebs-zfs-controller-sa
+      zfsNode:
+        create: true
+        name: openebs-zfs-node-sa
+    zfs:
+      bin: zfs
+    zfsController:
+      additionalVolumes: []
+      annotations: {}
+      componentName: openebs-zfs-controller
+      initContainers: []
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels:
+        name: openebs-zfs-controller
+      priorityClass:
+        create: true
+        name: zfs-csi-controller-critical
+      provisioner:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-provisioner
+          tag: v3.5.0
+        name: csi-provisioner
+      replicas: 1
+      resizer:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-resizer
+          tag: v1.8.0
+        name: csi-resizer
+      resources: {}
+      securityContext: {}
+      serviceName: openebs-zfs
+      snapshotController:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/snapshot-controller
+          tag: v6.2.2
+        name: snapshot-controller
+      snapshotter:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-snapshotter
+          tag: v6.2.2
+        name: csi-snapshotter
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+    zfsNode:
+      additionalVolumes: []
+      allowedTopologyKeys: All
+      annotations: {}
+      componentName: openebs-zfs-node
+      driverRegistrar:
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.k8s.io/
+          repository: sig-storage/csi-node-driver-registrar
+          tag: v2.8.0
+        name: csi-node-driver-registrar
+      initContainers: []
+      kubeletDir: /var/lib/kubelet/
+      labels: {}
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+      priorityClass:
+        create: true
+        name: zfs-csi-node-critical
+      resources: {}
+      securityContext: {}
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+    zfsPlugin:
+      image:
+        pullPolicy: IfNotPresent
+        registry: null
+        repository: openebs/zfs-driver
+        tag: 2.3.0
+      name: openebs-zfs-plugin
+  
+  

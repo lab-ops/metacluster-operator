@@ -1,0 +1,31 @@
+# permissions for end users to edit openebs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: openebs-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: metacluster-operator
+    app.kubernetes.io/part-of: metacluster-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: openebs-editor-role
+rules:
+- apiGroups:
+  - storage.lab-ops.cloud
+  resources:
+  - openebs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - storage.lab-ops.cloud
+  resources:
+  - openebs/status
+  verbs:
+  - get
